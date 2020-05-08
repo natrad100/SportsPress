@@ -29,6 +29,8 @@ if ( class_exists( 'WP_Importer' ) ) {
 				'sp_league' => __( 'Leagues', 'sportspress' ),
 				'sp_season' => __( 'Seasons', 'sportspress' ),
 				'sp_nationality' => __( 'Nationality', 'sportspress' ),
+				'sp_email' => __( 'Email', 'sportspress' ),
+				'sp_phone' => __( 'Phone', 'sportspress' ),
 			);
 			parent::__construct();
 		}
@@ -118,14 +120,22 @@ if ( class_exists( 'WP_Importer' ) ) {
 
 					// Add team to staff
 					add_post_meta( $id, 'sp_team', $team_id );
-
+					
 					// Update current team if first in array
 					if ( $i == 0 ):
 						update_post_meta( $id, 'sp_current_team', $team_id );
 					endif;
-
+					
 					$i++;
 				endforeach;
+				
+					// Add Phone to staff
+                    $phone = trim( strtolower( sp_array_value( $meta, 'sp_phone' ) ) );
+                    update_post_meta( $id, 'sp_phone', $phone );
+				
+					// Add Email to staff
+                    $email = trim( strtolower( sp_array_value( $meta, 'sp_email' ) ) );
+                    update_post_meta( $id, 'sp_email', $email );
 
 				// Update nationality
 				$nationality = trim( strtolower( sp_array_value( $meta, 'sp_nationality' ) ) );
@@ -172,7 +182,7 @@ if ( class_exists( 'WP_Importer' ) ) {
 		function greet() {
 			echo '<div class="narrow">';
 			echo '<p>' . __( 'Hi there! Choose a .csv file to upload, then click "Upload file and import".', 'sportspress' ).'</p>';
-			echo '<p>' . sprintf( __( 'Staff need to be defined with columns in a specific order (6 columns). <a href="%s">Click here to download a sample</a>.', 'sportspress' ), plugin_dir_url( SP_PLUGIN_FILE ) . 'dummy-data/staff-sample.csv' ) . '</p>';
+			echo '<p>' . sprintf( __( 'Staff need to be defined with columns in a specific order (6 columns, with custom 2 added (HapHazard)). <a href="%s">Click here to download a sample</a>.', 'sportspress' ), plugin_dir_url( SP_PLUGIN_FILE ) . 'dummy-data/staff-sample.csv' ) . '</p>';
 			wp_import_upload_form( 'admin.php?import=sp_staff_csv&step=1' );
 			echo '</div>';
 		}
